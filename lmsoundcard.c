@@ -125,10 +125,12 @@ void soundcard_modem(void)
 
 static int soundcard_open(struct lm_interface_state *s)
 {
+	return 0;
+
     int tmp, err;
     /* init the sound card to 8000 Hz, Mono, 16 bits */
 
-    s->handle = open("/dev/dsp", O_RDWR);
+    s->handle = open("/dev/snd/pcmC0D0p", O_RDWR);
     if (s->handle < 0) {
         perror("/dev/dsp");
         exit(1);
@@ -151,7 +153,7 @@ static int soundcard_open(struct lm_interface_state *s)
     tmp=AFMT_S16_LE;
     err=ioctl(s->handle,SNDCTL_DSP_SETFMT,&tmp);
     if (err < 0) goto error;
-    
+
     /* should be last */
     tmp = 8000;
     err=ioctl(s->handle,SNDCTL_DSP_SPEED,&tmp);
